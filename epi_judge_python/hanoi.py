@@ -9,8 +9,16 @@ NUM_PEGS = 3
 
 
 def compute_tower_hanoi(num_rings: int) -> List[List[int]]:
-    # TODO - you fill in here.
-    return []
+    def _compute_tower_hanoi(n: int, src_peg: int, int_peg: int, dest_peg: int):
+        if n == 0:
+            return []
+
+        return _compute_tower_hanoi(n - 1, src_peg, dest_peg, int_peg) + [
+            [src_peg, dest_peg]] + _compute_tower_hanoi(n - 1, int_peg, src_peg, dest_peg)
+
+    moves = _compute_tower_hanoi(num_rings, src_peg=0, int_peg=2, dest_peg=1)
+
+    return moves
 
 
 @enable_executor_hook
@@ -32,6 +40,7 @@ def compute_tower_hanoi_wrapper(executor, num_rings):
 
 
 if __name__ == '__main__':
+    # print(compute_tower_hanoi(25))
     exit(
         generic_test.generic_test_main('hanoi.py', 'hanoi.tsv',
                                        compute_tower_hanoi_wrapper))
