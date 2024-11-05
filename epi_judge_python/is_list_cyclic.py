@@ -8,7 +8,31 @@ from test_framework.test_utils import enable_executor_hook
 
 
 def has_cycle(head: ListNode) -> Optional[ListNode]:
-    # TODO - you fill in here.
+    dummy_head = ListNode(0, head)
+
+    #           s
+    #           f
+    # 1 -> 2 -> 3
+    #      ^    |
+    #      ------
+
+    slow = fast = dummy_head.next
+    while slow and fast:
+        slow = slow.next
+
+        if not slow:
+            return None
+
+        fast = fast.next
+        if fast:
+            fast = fast.next
+        else:
+            return None
+
+        # TODO: Add to notes (use 'is' for object reference comparison)
+        if slow is fast:
+            return slow
+
     return None
 
 
@@ -59,6 +83,15 @@ def has_cycle_wrapper(executor, head, cycle_idx):
 
 
 if __name__ == '__main__':
+    #cycle_node1 = ListNode(3, None)
+    #test_list = ListNode(1, ListNode(2, cycle_node1))
+    #cycle_node1.next = test_list.next
+
+    #print(test_list)
+
+    #result = has_cycle(test_list)
+    #print(result)
+
     exit(
         generic_test.generic_test_main('is_list_cyclic.py',
                                        'is_list_cyclic.tsv',
