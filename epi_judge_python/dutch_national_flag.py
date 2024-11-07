@@ -7,8 +7,81 @@ from test_framework.test_utils import enable_executor_hook
 
 RED, WHITE, BLUE = range(3)
 
-
+# Inputs:
+# - array, A: List[int]
+# - pivot, i: int
+#
+# Result:
+# - (in-place) Partition s.t. elements less than, then equal to, then greater than the pivot
+#
+# Notes:
+# - An array reordered s.t. 3 paritions
+#     - Elems. less than the pivot
+#     - Elems. equal to the pivot
+#     - Elems. greater than the pivot
+#
+# Example:
+# A = [0, 1, 2, 0, 2, 1, 1]
+# i = 3, A[i] = 0
+#
+# Put pivot at the end:
+# A = [0, 2, 2, 1, 1, 1, 0]
+#      l
+#      m
+#         h
 def dutch_flag_partition(pivot_index: int, A: List[int]) -> None:
+    if len(A) == 0:
+        return
+
+    pivot = A[pivot_index]
+
+    # Swap pivot with last element
+    A[pivot_index], A[-1] = A[-1], A[pivot_index]
+
+    l, m, h = 0, -1, len(A) - 2
+
+    while l <= h:
+        if A[l] > pivot:
+            A[l], A[h] = A[h], A[l]
+            h -= 1
+        elif A[l] < pivot:
+            l += 1
+        else:
+            if m == -1:
+                m = l
+            else:
+                A[l], A[m] = A[m], A[l]
+                m += 1
+
+    # Put the pivot back by swapping it with the "high" pointer
+    # Note the '+ 1' due to the loop condition above
+    A[-1], A[h + 1] = A[h + 1], A[-1]
+
+
+# Potentially correct algorithm for a quicksort partition step?
+def quicksort_partition(pivot_index: int, A: List[int]) -> None:
+    if len(A) == 0:
+        return
+
+    pivot = A[pivot_index]
+
+    # Swap pivot with last element
+    A[pivot_index], A[-1] = A[-1], A[pivot_index]
+
+    l, m, h = 0, 0, len(A) - 2
+
+    while l <= h:
+        if A[l] > pivot:
+            A[l], A[h] = A[h], A[l]
+            h -= 1
+        elif A[l] < pivot:
+            l += 1
+
+    # Put the pivot back by swapping it with the "high" pointer
+    # Note the '+ 1' due to the loop condition above
+    A[-1], A[h + 1] = A[h + 1], A[-1]
+
+def dutch_flag_partition0(pivot_index: int, A: List[int]) -> None:
     pivot = A[pivot_index]
     A[pivot_index], A[len(A) - 1] = A[len(A) - 1], A[pivot_index]
 
@@ -88,10 +161,11 @@ def dutch_flag_partition_wrapper(executor, A, pivot_idx):
 
 
 if __name__ == '__main__':
-    # test_list = [0, 0, 0, 0, 1, 1, 2, 1, 1]
-    # dutch_flag_partition(4, test_list)
-    # print(test_list)
-    exit(
-        generic_test.generic_test_main('dutch_national_flag.py',
-                                       'dutch_national_flag.tsv',
-                                       dutch_flag_partition_wrapper))
+    test_list = [0, 0, 0, 0, 1, 1, 2, 1, 1]
+    #test_list = [-1, -2, -3, 2, 0, 1]
+    dutch_flag_partition(4, test_list)
+    print(test_list)
+    #exit(
+    #    generic_test.generic_test_main('dutch_national_flag.py',
+    #                                   'dutch_national_flag.tsv',
+    #                                   dutch_flag_partition_wrapper))
