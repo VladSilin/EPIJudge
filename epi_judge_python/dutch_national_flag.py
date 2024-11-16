@@ -29,6 +29,22 @@ RED, WHITE, BLUE = range(3)
 #      l
 #      m
 #         h
+# [l, m, m, l, l, l, h, h, h, p]
+#                    l
+#                 h
+# TODO: Add to notes (technique for partitioning problems, categorize elements rather than listing explicitly)
+# Start:
+# [l, l, m, m, l, l, h, h, h, p]
+#
+# [l, l, l, l, m, m, p, h, h, h]
+#           d        l
+#                 m
+#                 h
+#
+# [l, l, l, l, l, m, m, h, h, h, h, p]
+#              d
+#                       l
+#                    h
 def dutch_flag_partition(pivot_index: int, A: List[int]) -> None:
     if len(A) == 0:
         return
@@ -38,31 +54,35 @@ def dutch_flag_partition(pivot_index: int, A: List[int]) -> None:
     # Swap pivot with last element
     A[pivot_index], A[-1] = A[-1], A[pivot_index]
 
-    l, m, h = 0, -1, len(A) - 2
+    l, d, h = 0, -1, len(A) - 2
 
     while l <= h:
         if A[l] > pivot:
             A[l], A[h] = A[h], A[l]
             h -= 1
         elif A[l] < pivot:
-            l += 1
-        else:
-            if m == -1:
-                m = l
+            # In this case, no middle partition yet exists
+            if d == -1:
+                l += 1
             else:
-                A[l], A[m] = A[m], A[l]
-                m += 1
+                A[l], A[d] = A[d], A[l]
+                d += 1
+                l += 1
+        # This is the "equal to pivot" case
+        else:
+            if d == -1:
+                d = l
+                l += 1
+            else:
+                l += 1
 
     # Put the pivot back by swapping it with the "high" pointer
-    # Note the '+ 1' due to the loop condition above
-    A[-1], A[h + 1] = A[h + 1], A[-1]
+    # This works due to the '<=' loop condition above
+    A[-1], A[l] = A[l], A[-1]
 
 
 # Potentially correct algorithm for a quicksort partition step?
 def quicksort_partition(pivot_index: int, A: List[int]) -> None:
-    if len(A) == 0:
-        return
-
     pivot = A[pivot_index]
 
     # Swap pivot with last element
@@ -161,11 +181,12 @@ def dutch_flag_partition_wrapper(executor, A, pivot_idx):
 
 
 if __name__ == '__main__':
-    test_list = [0, 0, 0, 0, 1, 1, 2, 1, 1]
+    #test_list = [1, 0, 0, 0, 0, 1, 1, 0, 2, 2, 1, 1, 3, 4, -1, -2, 1]
     #test_list = [-1, -2, -3, 2, 0, 1]
-    dutch_flag_partition(4, test_list)
-    print(test_list)
-    #exit(
-    #    generic_test.generic_test_main('dutch_national_flag.py',
-    #                                   'dutch_national_flag.tsv',
-    #                                   dutch_flag_partition_wrapper))
+    #test_list = [2, 3, 2, 5, 1, 2, 3, 2, 2, 2]
+    #dutch_flag_partition(9, test_list)
+    #print(test_list)
+    exit(
+        generic_test.generic_test_main('dutch_national_flag.py',
+                                       'dutch_national_flag.tsv',
+                                       dutch_flag_partition_wrapper))
