@@ -29,8 +29,10 @@ def buy_and_sell_stock_once(prices: List[float]) -> float:
 
 
 # Input:
+# prices: List[float], prices of a single stock over time
 
 # Output:
+# highest_profit: float, highest profit to be made by buying and selling once
 
 # Notes / Assumptions:
 
