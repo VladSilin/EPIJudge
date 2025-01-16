@@ -6,10 +6,21 @@ from test_framework.test_failure import PropertyName, TestFailure
 from test_framework.test_utils import enable_executor_hook
 
 
-def rearrange(A: List[int]) -> None:
-    # TODO - you fill in here.
-    return
+# Inputs
+# - A: List[int], list of numbers, unsorted
 
+# Outputs
+# - [in-place], list of numbers in "alternating" order (small, large)
+
+# Notes / Assumptions
+# - Solve in-place
+
+# Example
+# A = [1, 1, 2, 3, 5, 4]
+# Example result list: B = [1, 2, 1, 3, 5, 4]
+def rearrange(A: List[int]) -> None:
+    for i in range(len(A)):
+        A[i:i + 2] = sorted(A[i:i + 2], reverse=i % 2)
 
 @enable_executor_hook
 def rearrange_wrapper(executor, A):
@@ -46,6 +57,11 @@ def rearrange_wrapper(executor, A):
 
 
 if __name__ == '__main__':
+    #input = [1, 1, 2, 3, 5, 4]
+
+    #rearrange(input)
+
+    #print(input)
     exit(
         generic_test.generic_test_main('alternating_array.py',
                                        'alternating_array.tsv',
