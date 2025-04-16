@@ -4,7 +4,20 @@ from typing import List
 from test_framework import generic_test
 from test_framework.test_failure import TestFailure
 
+# Inputs:
+# graph: GraphVertex, a vertex with a label and list of other adjacent vertices
 
+# Output:
+# output: GraphVertex, a copy of the graph
+
+# Notes / Assumptions:
+# - All nodes in the returned graph are new (no references to old nodes)
+
+# Brute Force Outline:
+# - BFS traverse the nodes
+# - Store visited nodes
+
+# Optimal Outline:
 class GraphVertex:
     def __init__(self, label: int) -> None:
         self.label = label
@@ -12,8 +25,22 @@ class GraphVertex:
 
 
 def clone_graph(graph: GraphVertex) -> GraphVertex:
-    # TODO - you fill in here.
-    return GraphVertex(0)
+    if not graph: return None
+
+    q = collections.deque([graph])
+
+    vertex_map = {graph: GraphVertex(graph.label)}
+    while q:
+        cur = q.popleft()
+
+        for e in cur.edges:
+            if e not in vertex_map:
+                vertex_map[e] = GraphVertex(e.label)
+                q.append(e)
+
+            vertex_map[cur].edges.append(vertex_map[e])
+
+    return vertex_map[graph]
 
 
 def copy_labels(edges):
