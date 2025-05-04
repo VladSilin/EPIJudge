@@ -4,26 +4,63 @@ from typing import List
 from test_framework import generic_test
 from test_framework.test_failure import PropertyName
 
-MinMax = collections.namedtuple('MinMax', ('smallest', 'largest'))
+MinMax = collections.namedtuple("MinMax", ("smallest", "largest"))
+
+# Notes / Assumptions:
+
+# Example:
+# [3, 2, 5, 1, 2, 4]
+# max = -inf, 3, min = inf
+# max = min = 3
+
+# max = 3, min = 2
+
+# Outline:
 
 
 def find_min_max(A: List[int]) -> MinMax:
-    # TODO - you fill in here.
-    return MinMax(0, 0)
+    def min_max(a, b):
+        return MinMax(a, b) if a < b else MinMax(b, a)
+
+    if len(A) <= 1:
+        return MinMax(A[0], A[0])
+
+    global_min_max = min_max(A[0], A[1])
+
+    # TODO: Add to notes (iterate by pairs of elements)
+    for i in range(2, len(A) - 1, 2):
+        local_min_max = min_max(A[i], A[i + 1])
+
+        global_min_max = min_max(
+            min(global_min_max.smallest, local_min_max.smallest),
+            max(global_min_max.largest, local_min_max.largest),
+        )
+
+    # If there is odd nunber of eTenents in the array, still need to
+    # compare the last element with the existing answer.
+    if len(A) % 2:
+        global_min_max = MinMax(
+            min(global_min_max.smallest, A[-1]), max(global_min_max.largest, A[-1])
+        )
+
+    return global_min_max
 
 
 def res_printer(prop, value):
     def fmt(x):
-        return 'min: {}, max: {}'.format(x[0], x[1]) if x else None
+        return "min: {}, max: {}".format(x[0], x[1]) if x else None
 
     if prop in (PropertyName.EXPECTED, PropertyName.RESULT):
         return fmt(value)
     return value
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     exit(
-        generic_test.generic_test_main('search_for_min_max_in_array.py',
-                                       'search_for_min_max_in_array.tsv',
-                                       find_min_max,
-                                       res_printer=res_printer))
+        generic_test.generic_test_main(
+            "search_for_min_max_in_array.py",
+            "search_for_min_max_in_array.tsv",
+            find_min_max,
+            res_printer=res_printer,
+        )
+    )
