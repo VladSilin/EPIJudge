@@ -2114,7 +2114,7 @@ problem_mapping = {
                 "total": 10
             },
             "Python: gray_code.py": {
-                "passed": 0,
+                "passed": 10,
                 "total": 10
             }
         }
