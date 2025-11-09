@@ -39,7 +39,6 @@ def build_min_height_bst_from_sorted_array0(A: List[int]) -> Optional[BstNode]:
             get_median_node(A[median_idx + 1 :]),
         )
 
-    # TODO - you fill in here.
     return get_median_node(A)
 
 
@@ -57,7 +56,6 @@ def build_min_height_bst_from_sorted_array(A: List[int]) -> Optional[BstNode]:
             get_median_node(median_idx + 1, end),
         )
 
-    # TODO - you fill in here.
     return get_median_node(A)
 
 
