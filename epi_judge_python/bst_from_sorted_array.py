@@ -47,16 +47,16 @@ def build_min_height_bst_from_sorted_array(A: List[int]) -> Optional[BstNode]:
         if start >= end:
             return None
 
-        median_idx = start + (end - start // 2)
+        median_idx = start + (end - start) // 2
         median = A[median_idx]
 
         return BstNode(
             median,
-            get_median_node(0, median_idx),
+            get_median_node(start, median_idx),
             get_median_node(median_idx + 1, end),
         )
 
-    return get_median_node(A)
+    return get_median_node(0, len(A))
 
 
 @enable_executor_hook
